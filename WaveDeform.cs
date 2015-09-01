@@ -9,16 +9,13 @@ public class WaveDeform : MonoBehaviour {
 	public float speed = 1;
 
 	private Mesh mesh;
-	bool animating;
-	private IEnumerator coroutine;
+	private bool animating;
+
 	void Start ()
 	{
-		coroutine = FadeLogoTo();
 		mesh = GetComponent<MeshFilter>().mesh;
-		HumanDetector.startAnimations += ToggleFade;
 	}
 	
-	// Update is called once per frame
 	void Update ()
 	{
 		Animate();
@@ -44,37 +41,5 @@ public class WaveDeform : MonoBehaviour {
 		}
 		
 		mesh.vertices = vertices;
-	}
-
-	public void ToggleFade(){
-		Debug.Log("toggle");
-		if(animating)
-		{
-			StopCoroutine(coroutine);
-			animating = !animating;
-			coroutine = FadeLogoTo();
-			StartCoroutine(coroutine);
-		}
-		else
-			StartCoroutine(coroutine);
-	}
-
-	public IEnumerator FadeLogoTo()
-	{
-		animating = true;
-		Color startColor = this.GetComponent<Renderer>().material.GetColor("_TintColor");
-		float from = startColor.a;
-		float time = 0;
-
-		float to = (from > 0) ? 0 : 0.73f;
-
-		while(from < to )
-		{
-			time += Time.deltaTime;
-			this.GetComponent<Renderer>().material.SetColor("_TintColor", new Color(0.73f, 0.73f, 0.73f, Mathf.Lerp(from, to, time/5)));
-			yield return null;
-		}
-
-		ToggleFade();
 	}
 }
